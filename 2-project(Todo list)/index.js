@@ -1,65 +1,44 @@
 "use strict";
 
-function toDo(element, title, isDone, parent){
-    return {
-        el: document.createElement(`${element}`),
-        title: title,
-        isDone: isDone,
-        toggle: function () {
-            if(!isDone) return isDone === true
-            else return isDone === false
-        },
-        create: function () {
-            this.el.textContent = this.title
-            parent.appendChild(this.el)
-        },
-        btnCreate: function(content, cls, dataset){
-            const btn = document.createElement('button')
-            btn.textContent = content
-            btn.classList.add(`${cls}`)
-            btn.dataset.key = `${dataset}`
-            this.el.appendChild(btn)
-        }
-    }
+if (!localStorage.getItem('tasks')){
+    localStorage.setItem('tasks', JSON.stringify([]))
 }
 
 let ToDoArray = {
-    array: [],
+    array: JSON.parse(localStorage.getItem('tasks')),
     pushToArray(task) {
-        return this.array.push(task);
+        this.array.push(task);
+        return localStorage.setItem('tasks', JSON.stringify(this.array))
     },
     removeFromArray(index){
-        return this.array.splice(index, 1)
+        this.array.splice(index, 1)
+        return localStorage.setItem('tasks', JSON.stringify(this.array))
     }
 };
 
 
-(function() {
-    const title = document.createElement('h1')
-    const todoTitle = document.createElement('input')
-    const addBtn = document.createElement('button')
-    const todoTasks = document.createElement('ul')
-    addBtn.textContent = 'Add';
-    title.textContent = 'To Do List';
-    document.body.appendChild(title)
-    document.body.appendChild(todoTitle)
-    document.body.appendChild(addBtn)
-    document.body.appendChild(todoTasks)
-}())
+function toDo(title, isDone){
+    return {
+        index: 0,
+        title: title,
+        isDone: isDone,
+    }
+}
+renderTasks()
+addTask()
+makeEvents()
 
 function querySelectElements() {
-    const addBtn = document.querySelector('button')
+    const addBtn = document.querySelector('.add')
     const todoTitle = document.querySelector('input')
-    const todoTasks = document.querySelector('ul')
-    return [addBtn, todoTitle, todoTasks]
+    return [addBtn, todoTitle]
 }
 
 
-
 function addTask(){
-    const [addBtn, todoTitle, todoTasks] = querySelectElements()
+    const [addBtn, todoTitle] = querySelectElements()
     addBtn.onclick = function () {
-        const task = toDo('li', todoTitle.value, true, todoTasks)
+        const task = toDo(todoTitle.value, false)
         ToDoArray.pushToArray(task)
         todoTitle.value = ''
         renderTasks()
@@ -67,23 +46,47 @@ function addTask(){
 }
 
 
+function createBtns(element, index){
+    const btnToggle = document.createElement('button')
+    const btnRemove = document.createElement('button')
+    btnToggle.textContent = 'Done'
+    btnRemove.textContent = 'Remove'
+    btnToggle.classList.add(index)
+    btnRemove.classList.add(index)
+    btnToggle.dataset.key = 'toggle';
+    btnRemove.dataset.key = 'remove';
+    element.append(btnToggle, btnRemove)
+}
+
 function makeEvents(){
-    const btns = document.querySelectorAll('button[data-key]')
-    btns.forEach((button) => {
-        button.addEventListener('click', function (event){
-            if (button.dataset.key === 'status'){
-                const task = document.querySelector(`li[data-index="${button.classList[0]}"]`)
-                task.classList.toggle('true')
+    const ul = document.querySelector('ul')
+    const arr = ToDoArray.array
+    ul.addEventListener('click', function (event){
+        if(event.target.dataset.key === 'toggle'){
+            console.log(event.target.classList[0])
+            const index = event.target.classList[0]
+            for (let i = 0; i < arr.length; i++) {
+                if(arr[i].index === +index){
+                    arr[i].isDone = !arr[i].isDone
+                    localStorage.setItem('tasks', JSON.stringify(arr))
+                    renderTasks()
+                }
             }
-            else if (button.dataset.key === 'remove'){
-                console.log(ToDoArray.array)
-                ToDoArray.removeFromArray(button.classList[0])
-                console.log(ToDoArray.array)
-                renderTasks()
+            event.stopPropagation()
+        }
+        else if(event.target.dataset.key === 'remove'){
+            const index = event.target.classList[0]
+            for (let i = 0; i < arr.length; i++) {
+                if(arr[i].index === +index){
+                    ToDoArray.removeFromArray(index)
+                    renderTasks()
+                }
             }
-        })
+            event.stopPropagation()
+        }
     })
 }
+
 
 
 function renderTasks() {
@@ -91,12 +94,21 @@ function renderTasks() {
     ul.innerHTML = ''
     const arr = ToDoArray.array
     for (let i = 0; i < arr.length; i++) {
-        arr[i].el.dataset.index = `${i}`
-        arr[i].create()
-        arr[i].btnCreate('Done', i, 'status')
-        arr[i].btnCreate('Remove', i, 'remove')
+        const li = document.createElement('li')
+        li.textContent = arr[i].title
+        if (arr[i].isDone) li.classList.toggle('true')
+        createBtns(li, i)
+        ul.appendChild(li)
     }
-    makeEvents()
+    setIndex()
+
 }
 
-addTask()
+function setIndex(){
+    const arr = ToDoArray.array
+    for (let i = 0; i < arr.length; i++) {
+        arr[i].index = i;
+    }
+    localStorage.setItem('tasks', JSON.stringify(arr))
+}
+
