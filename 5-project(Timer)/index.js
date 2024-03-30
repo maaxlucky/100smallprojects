@@ -13,8 +13,7 @@ if (!localStorage.getItem('timer')){
     const [min, sec] = timer.textContent.split(':')
     let userTimer = new Date().setMinutes(+min, +sec)
     localStorage.setItem('timer', JSON.stringify(userTimer))
-}
-else {
+} else {
     const unix = JSON.parse(localStorage.getItem('timer'))
     const date = new Date(unix)
     timer.textContent = `${date.getMinutes()}:${date.getSeconds()}`

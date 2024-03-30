@@ -1,0 +1,29 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+input:invalid {
+    border-color: red;
+    background-color: #fdd;
+    box-shadow: 0 0 5px 1px red;
+}
+
+input{
+    display: block;
+}
+
+form > div {
+    margin-bottom: 10px;
+}
+
+span {
+    font-size: 80%;
+    color: red
+}
