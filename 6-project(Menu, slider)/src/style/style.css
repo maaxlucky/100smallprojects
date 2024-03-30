@@ -1,0 +1,80 @@
+body {
+    background-color: grey;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h1, h2 {
+    color: white;
+}
+
+a {
+    display: block;
+    margin-top: 10px;
+    color: white;
+    text-decoration: none;
+}
+
+a:link, a:visited{
+    color:white;
+}
+
+.book {
+    display: inline-block;
+}
+
+.images {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 350px;
+}
+
+
+
+.right-arrow {
+    margin-left: 10px;
+}
+.left-arrow {
+    margin-right: 10px;
+}
+
+.left-arrow > button, .right-arrow > button, .dots > button {
+    background-color: grey;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.dots {
+    margin-left: 160px;
+}
+
+h2 {
+    margin-left: 90px;
+}
+
+.dots > button{
+    font-size: 1.5rem;
+}
+
+.dots > .choosed {
+    color: green;
+}
+
+img {
+    width: 300px;
+    height: 300px;
+}
+
+a:hover {
+    color: royalblue;
+}
+
+.toggle {
+    display: none;
+}
