@@ -1,0 +1,26 @@
+h1 {
+    color: royalblue;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.btn {
+    display: flex;
+    justify-content: center;
+}
+
+input {
+    margin: 10px 10px;
+}
+
+.error {
+    font-size: 80%;
+    color: red;
+}
+
+.success {
+    color: green
+}
